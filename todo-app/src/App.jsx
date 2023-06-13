@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+import Switch from 'react-switch'
+import { BsSunFill, BsFillMoonStarsFill } from 'react-icons/bs'
 import './App.css'
+import { TaskContainer } from './components/TaskContainer'
 
-function App() {
-  const [count, setCount] = useState(0)
+export const App = () => {
+	const [tasks, setTasks] = useState([])
+	const [dark, setDark] = useState(true)
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	useEffect(() => {
+		let myTodo = localStorage.getItem('myTodoTasks')
+		if (myTodo) setTasks(JSON.parse(myTodo))
+	}, [])
+
+	return (
+		<div className={`${dark ? 'darkMode-App' : 'lightMode-App'} App`}>
+			<div
+				className={`${
+					dark
+						? 'darkMode-app-title-container'
+						: 'lightMode-app-title-container'
+				} app-title-container`}
+			>
+				<h1 className='app-title'>ToDo App</h1>
+			</div>
+
+			<Switch
+				checked={dark}
+				onChange={() => setDark(!dark)}
+				uncheckedIcon={
+					<div className='check-sun-btn'>
+						<BsSunFill size={18} />
+					</div>
+				}
+				checkedIcon={
+					<div className='check-moon-btn'>
+						<BsFillMoonStarsFill size={18} />
+					</div>
+				}
+			/>
+
+			<TaskContainer tasks={tasks} setTasks={setTasks} dark={dark} />
+		</div>
+	)
 }
-
-export default App
